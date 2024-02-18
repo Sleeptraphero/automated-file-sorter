@@ -3,11 +3,9 @@ import shutil
 from pathlib import Path
 
 # Directory to sort files
-
-path = r"C:/Users/radlm/Downloads/"
+path = Path(r"C:/Users/radlm/Downloads/")
 
 # Define file types and corresponding folders
-
 file_types = {
     "pdf": "pdf files",
     "xlsx": "data files",
@@ -19,7 +17,6 @@ file_types = {
 # Check if folders exist, if not create them
 for folder in set(file_types.values()):
     (path / folder).mkdir(parents=True, exist_ok=True)
-
 
 # Sort files by their extension
 for file in path.iterdir():
