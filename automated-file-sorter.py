@@ -1,35 +1,33 @@
-import os, shutil
+import os
+import shutil
+from pathlib import Path
 
 # Directory to sort files
 
 path = r"C:/Users/radlm/Downloads/"
 
-files = os.listdir(path)
+# Define file types and corresponding folders
 
-# Check if folder exists, if not create one
+file_types = {
+    "pdf": "pdf files",
+    "xlsx": "data files",
+    "jpg": "image files",
+    "png": "image files",
+    # Add more file types here if needed
+}
 
-folder_names = ["pdf files", "image files", "data files",]
+# Check if folders exist, if not create them
+for folder in set(file_types.values()):
+    (path / folder).mkdir(parents=True, exist_ok=True)
 
-for folder in folder_names:
-    if not os.path.exists(path + folder):
-        os.makedirs((path + folder))
 
 # Sort files by their extension
-
-for file in files:
-    # Move PDF files to "pdf files" folder
-    if ".pdf" in file and not os.path.exists(path + "pdf files/" + file):
-        shutil.move(path + file, path + "pdf files/" + file)
-
-    # Move Excel files to "data files" folder
-    elif ".xlsx" in file and not os.path.exists(path + "data files/" + file):
-        shutil.move(path + file, path + "data files/" + file)
-
-    # Move JPG files to "image files" folder
-    elif ".jpg" in file and not os.path.exists(path + "image files/" + file):
-        shutil.move(path + file, path + "image files/" + file)
-        
-    # If file type not recognized, print a message
-    # Ensuring it's a file before printing to avoid printing for folders
-    elif os.path.isfile(path + file):
-        print(file + " this file type is not included.")
+for file in path.iterdir():
+    if file.is_file():
+        extension = file.suffix[1:].lower()  # Get file extension without dot
+        if extension in file_types:
+            dest_folder = path / file_types[extension]
+            if not (dest_folder / file.name).exists():
+                shutil.move(file, dest_folder / file.name)
+        else:
+            print(f"{file.name} this file type is not included.")
